@@ -26,7 +26,7 @@ def test_add_to_cart():
     add_to_cart_button.click()
     time.sleep(5)
     browser.get("https://demo.opencart.com/en-gb?route=checkout/cart")
-    item_in_cart = browser.find_element("//*[@id=\"shopping-cart\"]/div/table/tbody/tr/td[2]/")
+    item_in_cart = browser.find_element(By.XPATH,"//*[@id=\"shopping-cart\"]/div/table/tbody/tr/td[2]/a")
     assert item_in_cart.is_displayed()
 
 
