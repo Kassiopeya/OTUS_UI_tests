@@ -2,7 +2,7 @@ import random
 import time
 from selenium import webdriver
 from selenium.webdriver.common.by import By
-from tests.Pages import MainPage, ItemCard, LoginPage, RegistrationPage
+from page_objects.pages import MainPage, ItemCard, LoginPage, RegistrationPage
 
 options = webdriver.ChromeOptions()
 options.add_argument('--ignore-ssl-errors=yes')
@@ -33,15 +33,6 @@ def test_add_to_cart():
     item_card.click_add_to_cart(browser1_)
     time.sleep(time_sleep_value)
     assert main_page.check_sum_changed(browser1_)=="1 item(s) - $602.00"
-
-def test_checkout_button_unauth():
-    # тест падает - в опенкарте баг - жмешь чекаут - попадаешь в корзину - пример для проверки скриншота
-    browser1_.get(opencart_url)
-    time.sleep(time_sleep_value)
-    main_page.click_checkout_button(browser1_)
-    time.sleep(time_sleep_value)
-    checkout_register_element = browser1_.find_element(By.ID, "checkout-register")
-    assert checkout_register_element.is_displayed()
 
 def test_wishlist_button_unauth():
     browser1_.get(opencart_url)
@@ -110,3 +101,12 @@ def test_negative_registration_empty_password():
     registration_page.click_switch_privacy_policy(browser1_)
     registration_page.click_submit(browser1_)
     assert registration_page.check_password_error(browser1_) == True
+
+def test_checkout_button_unauth():
+    # тест падает - в опенкарте баг - жмешь чекаут - попадаешь в корзину - пример для проверки скриншота
+    browser1_.get(opencart_url)
+    time.sleep(time_sleep_value)
+    main_page.click_checkout_button(browser1_)
+    time.sleep(time_sleep_value)
+    checkout_register_element = browser1_.find_element(By.ID, "checkout-register")
+    assert checkout_register_element.is_displayed()
