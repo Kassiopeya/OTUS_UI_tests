@@ -106,7 +106,5 @@ def test_checkout_button_unauth():
     # тест падает - в опенкарте баг - жмешь чекаут - попадаешь в корзину - пример для проверки скриншота
     browser1_.get(opencart_url)
     time.sleep(time_sleep_value)
-    main_page.click_checkout_button(browser1_)
-    time.sleep(time_sleep_value)
-    checkout_register_element = browser1_.find_element(By.ID, "checkout-register")
-    assert checkout_register_element.is_displayed()
+    registration_page.click_checkout_button(browser1_)
+    registration_page.check_checkout_page(browser1_)

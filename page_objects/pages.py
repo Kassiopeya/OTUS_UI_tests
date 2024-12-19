@@ -1,14 +1,19 @@
 import allure
+import selenium
+from selenium.common import NoSuchElementException, TimeoutException
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
-
 
 def wait_until_displayed_by_id(browser, locator):
     WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.ID, f"{locator}")))
 
 def wait_until_displayed_by_xpath(browser, locator):
     WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.XPATH, f"{locator}")))
+
+def wait_until_displayed_by_css(browser, locator):
+    WebDriverWait(browser, 2).until(EC.visibility_of_element_located((By.CSS_SELECTOR, f"{locator}")))
+
 
 class MainPage:
     def __init__(self, browser):
@@ -26,11 +31,6 @@ class MainPage:
         sum_text = browser.find_element(By.XPATH, "//*[@id=\"header-cart\"]/div/button")
         return sum_text.text
 
-# тут бага - тыкаешь кнопку checout - попадаешь на страницу Shopping Cart
-    @allure.step("Кликаем кнопку Checkout")
-    def click_checkout_button(self, browser):
-        checkout_button = browser.find_element(By.CSS_SELECTOR, "#top>div>div.nav.float-end>ul>li:nth-child(5)>a>span")
-        checkout_button.click()
 
     @allure.step("Проверяем, есть ли надпись Checkout")
     def check_content_text(self, browser):
@@ -152,3 +152,22 @@ class RegistrationPage:
         wait_until_displayed_by_id(browser, my_locator)
         error_text = browser.find_element(By.ID, my_locator)
         return error_text.is_displayed()
+
+# тут бага - тыкаешь кнопку checkout - попадаешь на страницу Shopping Cart
+    @allure.step("Кликаем кнопку Checkout")
+    def click_checkout_button(self, browser):
+        checkout_button = browser.find_element(By.CSS_SELECTOR, "#top>div>div.nav.float-end>ul>li:nth-child(5)>a>span")
+        checkout_button.click()
+
+    def check_checkout_page(self, browser):
+        my_locator = "checkout-register11"
+        try:
+            wait_until_displayed_by_id(browser, my_locator)
+        except TimeoutException as e:
+            allure.attach(
+                body=self.browser.get_screenshot_as_png(),
+                name="screenshot_image",
+                attachment_type=allure.attachment_type.PNG
+            )
+
+            raise AssertionError(e)
